@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <nav>
+        <ul>
+            <li><a href="global.html">Головна сторінка</a></li>
+            <li><a href="http://localhost/my_project/survey.php">Перейти до анкети</a></li>
+        </ul>
+    </nav>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Динамічна таблиця з jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Динамічна таблиця</h1>
+
+<button id="reload">Оновити дані</button>
+<button id="sortByName">Сортувати за іменем</button>
+<button id="sortByAffiliation">Сортувати за фракцією</button>
+
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Ім'я</th>
+            <th>Фракція</th>
+            <th>Ранг</th>
+            <th>Місцезнаходження</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Дані таблиці будуть додаватися тут -->
+    </tbody>
+</table>
+
+<script src="script (2).js"></script>
+
+</body>
+</html>
