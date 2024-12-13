@@ -1,0 +1,88 @@
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOOK</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script>
+        // Завантаження жартів
+        function loadJoke() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "jokes.txt", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var jokes = xhr.responseText.split('\n');
+                    var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+                    document.getElementById("joke").innerText = randomJoke;
+                }
+            };
+            xhr.send();
+        }
+
+        // Завантажити жарт при завантаженні сторінки
+        window.onload = function() {
+            loadJoke();
+        }
+    </script> 
+</head>
+<body>
+    <header>
+        <h1>HOOK</h1>
+        <nav>
+            <ul>
+                <li><a href="global.html">Головна сторінка</a></li>
+                <li><a href="catalog.html">Каталог товарів</a></li>
+                <li><a href="basket.html">Кошик</a></li>
+                <li><a href="contacts.html">Контакти</a></li>
+                <li><a href="http://localhost/my_project/survey.php">Перейти до анкети</a></li>
+                <li><a href="додlab7.html">Дод. lab7</a></li>
+                <li><a href="http://localhost/my_project/lab8.php">lab8</a></li>            
+            </ul>
+        </nav>
+    </header>
+    <div class="menu-button">
+    <button class="menu-button">☰ Меню</button>
+        </div>
+    <div class="menu">
+        <h2>HOOK</h2>
+        <ul>
+            <li><a href="global.html">Головна</a></li>
+            <li><a href="catalog.html">Каталог</a></li>
+            <li><a href="basket.html">Кошик</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+            
+        </ul>
+    </div>
+  <div class="container">
+  <div class="small-column">
+  <section class="product-list">
+            <a href="catalog.html" class="button">Переглянути каталог</a>
+        </section>
+     </div>
+  <div class="large-column">
+   <div class="mein">
+    <main>
+        <button id="toggle-size-btn">Зменшити розмір елементів</button>  
+        <!-- Виведення випадкового жарту -->
+    <p id="joke"></p>
+    </main>
+     </div>
+    </div>
+  </div>
+  
+
+    <div class="footer">
+    <footer>
+        <p><nav>
+            <ul>
+                <li><a href="global.html">Головна сторінка</a></li>
+                <li><a href="contacts.html">Контакти</a></li>
+            </ul>
+        </nav></p>
+    </footer> </div>
+
+
+
+</body>
+</html>
