@@ -20,10 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     fwrite($file, "Питання 3: $question3\n");
     fclose($file);
 
-    // Показуємо повідомлення з датою та часом заповнення
+    // Повертаємо лише текст, щоб відобразити повідомлення
+    header('Content-Type: text/plain');  // Встановлюємо заголовок для текстового вмісту
     echo "Ваша анкета надіслана. Час заповнення: $date";
+    exit; // Завершуємо виконання скрипту
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -31,9 +34,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Анкета опитування</title>
     <link rel="stylesheet" href="style.css"> <!-- Підключення стилю -->
-
-
     <script>
+        // Функція для відправки форми за допомогою XMLHttpRequest
+        function submitForm(event) {
+            event.preventDefault();  // Запобігаємо стандартному відправленню форми
+            
+            var xhr = new XMLHttpRequest();
+            var formData = new FormData(document.querySelector('form'));
+
+            xhr.open("POST", "survey.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Вивести результат на сторінці
+                    document.getElementById("result").innerText = xhr.responseText;
+                }
+            };
+            xhr.send(formData);  // Відправляємо форму асинхронно
+        }
+
         // Завантаження жартів
         function loadJoke() {
             var xhr = new XMLHttpRequest();
@@ -52,15 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         window.onload = function() {
             loadJoke();
         }
-    </script> 
-
-
+    </script>
 </head>
 <body>
     <h1>Анкета опитування</h1>
     <!-- Виведення випадкового жарту -->
     <p id="joke"></p>
-    <form action="survey.php" method="POST">
+    <form onsubmit="submitForm(event)">
         <label for="name">Ім'я:</label>
         <input type="text" name="name" required><br><br>
 
@@ -82,8 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <input type="submit" value="Надіслати">
     </form>
+
+    <!-- Місце для виведення результату -->
+    <p id="result"></p>
+
     <p><a href="global.html">Повернутися на головну сторінку</a></p>
-
-
 </body>
 </html>
+
