@@ -1,55 +1,39 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <nav>
-        <ul>
-            <li><a href="global.html">Головна сторінка</a></li>
-            <li><a href="http://localhost/my_project/survey.php">Перейти до анкети</a></li>
-        </ul>
-    </nav>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Динамічна таблиця з jQuery</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+$(document).ready(function() {
+    const apiUrl = 'http://lab.vntu.org/api-server/lab7.php';
 
-        table, th, td {
-            border: 1px solid black;
-        }
+    function updateTable(data) {
+        const tableBody = $('#dataTable tbody');
+        tableBody.empty();
+        data.forEach(item => {
+            tableBody.append(
+                `<tr>
+                    <td>${item.name}</td>
+                    <td>${item.affiliation}</td>
+                    <td>${item.rank}</td>
+                    <td>${item.location}</td>
+                </tr>`
+            );
+        });
+    }
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
+    function loadData() {
+        $.getJSON(apiUrl, updateTable).fail(() => alert('Не вдалося завантажити дані'));
+    }
 
-<h1>Динамічна таблиця</h1>
+    function sortTable(columnIndex) {
+        const rows = $('#dataTable tbody tr').get();
+        rows.sort((a, b) => {
+            const valA = $(a).find('td').eq(columnIndex).text().toUpperCase();
+            const valB = $(b).find('td').eq(columnIndex).text().toUpperCase();
+            return valA.localeCompare(valB);
+        });
+        $('#dataTable tbody').append(rows);
+    }
+    
+    loadData();
 
-<button id="reload">Оновити дані</button>
-<button id="sortByName">Сортувати за іменем</button>
-<button id="sortByAffiliation">Сортувати за фракцією</button>
+    $('#reload').click(loadData);
+    $('#sortByName').click(() => sortTable(0));
+    $('#sortByAffiliation').click(() => sortTable(1));
+});
 
-<table id="dataTable">
-    <thead>
-        <tr>
-            <th>Ім'я</th>
-            <th>Фракція</th>
-            <th>Ранг</th>
-            <th>Місцезнаходження</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Дані таблиці будуть додаватися тут -->
-    </tbody>
-</table>
-
-<script src="script (2).js"></script>
-
-</body>
-</html>
