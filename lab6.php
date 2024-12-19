@@ -1,89 +1,83 @@
 <?php
+date_default_timezone_set('Europe/Kiev');
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Отримуємо дані з форми
     $name = $_POST['name'];
     $email = $_POST['email'];
     $question1 = $_POST['question1'];
     $question2 = $_POST['question2'];
     $question3 = $_POST['question3'];
 
-    // Отримуємо поточну дату та час
     $date = date('Y-m-d_H-i-s');
     $filename = "survey/$date.txt";
 
-    // Створюємо текстовий файл з відповідями
-    $file = fopen($filename, 'w');
-    fwrite($file, "Ім'я: $name\n");
-    fwrite($file, "Email: $email\n");
-    fwrite($file, "Питання 1: $question1\n");
-    fwrite($file, "Питання 2: $question2\n");
-    fwrite($file, "Питання 3: $question3\n");
-    fclose($file);
+    file_put_contents($filename, "Ім'я: $name\nEmail: $email\nПитання 1: $question1\nПитання 2: $question2\nПитання 3: $question3\n");
 
-    // Показуємо повідомлення з датою та часом заповнення
+    header('Content-Type: text/plain');
     echo "Ваша анкета надіслана. Час заповнення: $date";
+    exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Анкета опитування</title>
-    <link rel="stylesheet" href="style.css"> <!-- Підключення стилю -->
-
-
     <script>
-        // Завантаження жартів
+        function submitForm(event) {
+            event.preventDefault();
+
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData(document.querySelector('form'));
+
+            xhr.open("POST", "survey.php", true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.getElementById("result").innerText = xhr.responseText;
+                }
+            };
+            xhr.send(formData);
+        }
+
         function loadJoke() {
-            var xhr = new XMLHttpRequest();
+            const xhr = new XMLHttpRequest();
             xhr.open("GET", "jokes.txt", true);
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var jokes = xhr.responseText.split('\n');
-                    var randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const jokes = xhr.responseText.split('\n');
+                    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
                     document.getElementById("joke").innerText = randomJoke;
                 }
             };
             xhr.send();
         }
 
-        // Завантажити жарт при завантаженні сторінки
-        window.onload = function() {
-            loadJoke();
-        }
-    </script> 
-
-
+        window.onload = loadJoke;
+    </script>
 </head>
 <body>
     <h1>Анкета опитування</h1>
-    <!-- Виведення випадкового жарту -->
     <p id="joke"></p>
-    <form action="survey.php" method="POST">
-        <label for="name">Ім'я:</label>
-        <input type="text" name="name" required><br><br>
-
-        <label for="email">Email:</label>
-        <input type="email" name="email" required><br><br>
-
-        <label for="question1">Питання 1: Ваш улюблений колір?</label><br>
-        <input type="radio" name="question1" value="Червоний"> Червоний
-        <input type="radio" name="question1" value="Синій"> Синій
-        <input type="radio" name="question1" value="Зелений"> Зелений<br><br>
-
-        <label for="question2">Питання 2: Ваша улюблена їжа?</label><br>
-        <input type="radio" name="question2" value="Піца"> Піца
-        <input type="radio" name="question2" value="Суші"> Суші
-        <input type="radio" name="question2" value="Бургер"> Бургер<br><br>
-
-        <label for="question3">Питання 3: Ваш улюблений жанр фільмів?</label><br>
+    <form onsubmit="submitForm(event)">
+        <label>Ім'я: <input type="text" name="name" required></label><br><br>
+        <label>Email: <input type="email" name="email" required></label><br><br>
+        <label>Питання 1: Ваш улюблений колір?</label><br>
+        <label><input type="radio" name="question1" value="Червоний"> Червоний</label>
+        <label><input type="radio" name="question1" value="Синій"> Синій</label>
+        <label><input type="radio" name="question1" value="Зелений"> Зелений</label><br><br>
+        <label>Питання 2: Ваша улюблена їжа?</label><br>
+        <label><input type="radio" name="question2" value="Піца"> Піца</label>
+        <label><input type="radio" name="question2" value="Суші"> Суші</label>
+        <label><input type="radio" name="question2" value="Бургер"> Бургер</label><br><br>
+        <label>Питання 3: Ваш улюблений жанр фільмів?</label><br>
         <input type="text" name="question3" required><br><br>
-
-        <input type="submit" value="Надіслати">
+        <button type="submit">Надіслати</button>
     </form>
-    <p><a href="global.html">Повернутися на головну сторінку</a></p>
-
-
+    <p id="result"></p>
 </body>
 </html>
+
+
+
