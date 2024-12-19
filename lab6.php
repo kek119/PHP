@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Надіслати</button>
     </form>
     <p id="result"></p>
+    <a href="global.html">Головна сторінка</a>
 </body>
 </html>
 
